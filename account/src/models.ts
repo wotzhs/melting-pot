@@ -3,7 +3,7 @@ import { Schema as MongooseSchema } from "mongoose";
 export namespace Schema {
   export const Account = new MongooseSchema(
     {
-      fullname: String,
+      fullname: { type: String, required: true },
     },
     { timestamps: true, collection: "accounts" }
   );
