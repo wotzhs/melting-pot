@@ -11,13 +11,14 @@ export class App {
 
   constructor() {
     this.app = express();
-    this.setupSwagger();
+    this.setupMiddlewares();
     Router.register(this.app);
     DB.connect();
   }
 
-  setupSwagger() {
-    this.app.use("/", serve, setup(swaggerSpec));
+  setupMiddlewares() {
+    this.app.use(express.json());
+    this.app.use("/swagger", serve, setup(swaggerSpec));
   }
 
   run() {
