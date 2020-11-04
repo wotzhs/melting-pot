@@ -1,17 +1,35 @@
 import { model } from "mongoose";
 import { Schema } from "./models";
+import { IApiError } from "./interfaces";
+
 export class AccountService {
-  private memberModel: any;
+  private accountsModel: any;
   constructor() {
-    this.memberModel = model("accounts", Schema.Account);
+    this.accountsModel = model("accounts", Schema.Account);
   }
 
-  async CreateAccount(req) {
+  async CreateAccount(req): Promise<[object | null, IApiError | null]> {
     try {
-      const member = await this.memberModel.create({
+      const account = await this.accountsModel.create({
         fullname: req.body.fullname,
       });
-      return [{ _id: member._id }, null];
+      return [{ _id: account._id }, null];
+    } catch (err) {
+      return [
+        null,
+        {
+          code: 500,
+          type: "Internal",
+          message: err.message,
+        },
+      ];
+    }
+  }
+
+  async ListAccounts(req): Promise<[object[] | null, IApiError | null]> {
+    try {
+      const accounts = await this.accountsModel.find();
+      return [accounts, null];
     } catch (err) {
       return [
         null,

@@ -10,11 +10,20 @@ export class SignUpControlller {
     this.accountService = new AccountService();
   }
 
+  @Methods.Get("/")
+  async ListAccounts(req: Request, res: Response) {
+    const [resp, err] = await this.accountService.ListAccounts(req);
+    if (err) {
+      return res.status(err.code).send(err);
+    }
+    res.send(resp);
+  }
+
   @Methods.Post("/")
   async createAccount(req: Request, res: Response) {
     const [resp, err] = await this.accountService.CreateAccount(req);
     if (err) {
-      return res.status(400).send(err);
+      return res.status(err.code).send(err);
     }
 
     res.send(resp);
