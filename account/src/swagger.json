@@ -1,0 +1,166 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Account service API",
+    "version": "1.0.0",
+    "title": "Melting Pot - Account"
+  },
+  "host": "localhost:5000",
+  "tags": [
+    {
+      "name": "Account",
+      "description": "Everything about account"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/accounts": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Add a new account",
+        "description": "",
+        "operationId": "createAccount",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Account object that needs to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAccountRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Account created",
+            "schema": {
+              "$ref": "#/definitions/CreateAccountResponse"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List accounts",
+        "description": "List all accounts",
+        "operationId": "listAccounts",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of accounts successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/ListAccounts"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateAccountRequest": {
+      "type": "object",
+      "required": [
+        "fullname"
+      ],
+      "properties": {
+        "fullname": {
+          "type": "string",
+          "example": "John Doe"
+        }
+      }
+    },
+    "CreateAccountResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "some-id"
+        }
+      }
+    },
+    "ListAccounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Account"
+      }
+    },
+    "Account": {
+      "type": "object",
+      "properties": {
+        "fullname": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "cardStatus": {
+          "type": "string",
+          "enum": [
+            "active",
+            "closed",
+            "frozen"
+          ]
+        },
+        "walletBalance": {
+          "type": "number",
+          "example": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2020-11-04T15:43:22.085Z"
+        },
+        "updateAt": {
+          "type": "string",
+          "example": "2020-11-04T15:43:22.085Z"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 500
+        },
+        "type": {
+          "type": "string",
+          "example": "Internal"
+        },
+        "message": {
+          "type": "string",
+          "example": "Internal server error"
+        }
+      }
+    }
+  }
+}
