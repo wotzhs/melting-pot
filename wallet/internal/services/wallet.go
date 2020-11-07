@@ -12,16 +12,24 @@ func Listwallets() (*[]models.Wallet, error) {
 		return nil, err
 	}
 
-	var wallets *[]models.Wallet
+	wallets := []models.Wallet{}
 	for rows.Next() {
 		wallet := models.Wallet{}
-		if err := rows.Scan(&wallet); err != nil {
+		err := rows.Scan(
+			&wallet.ID,
+			&wallet.UserID,
+			&wallet.Balance,
+			&wallet.CreatedAt,
+			&wallet.UpdateAt,
+		)
+		if err != nil {
 			return nil, err
 		}
-		*wallets = append(*wallets, wallet)
+
+		wallets = append(wallets, wallet)
 	}
 
-	return wallets, nil
+	return &wallets, nil
 }
 
 func CreateWallet(userID string) (*models.Wallet, error) {
