@@ -3,11 +3,18 @@
 #[macro_use]
 extern crate rocket;
 
+#[macro_use]
+extern crate rocket_contrib;
+
 mod routes;
 
+use rocket_contrib::json::JsonValue;
+
 #[catch(404)]
-fn not_found() -> &'static str {
-    "404 not found"
+fn not_found() -> JsonValue {
+    json!({
+        "message": "404 not found"
+    })
 }
 
 pub fn rocket() -> rocket::Rocket {
