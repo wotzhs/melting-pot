@@ -1,2 +1,5 @@
 [global]
 port=5003
+
+[global.databases]
+db = { url = "postgresql://postgres@localhost:5433" }
