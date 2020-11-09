@@ -9,6 +9,7 @@ extern crate rocket_contrib;
 mod db;
 mod models;
 mod routes;
+mod services;
 
 use rocket_contrib::json::JsonValue;
 
