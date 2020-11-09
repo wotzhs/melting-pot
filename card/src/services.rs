@@ -1,11 +1,27 @@
 pub mod card {
     use crate::db;
     use crate::models;
+    use rand::Rng;
     use uuid::Uuid;
+
+    fn generate_card_number() -> String {
+        const CHARSET: &[u8] = b"0123456789";
+        const CARD_NUMBER_LEN: usize = 12;
+
+        let mut rng = rand::thread_rng();
+
+        let card_number: String = (0..CARD_NUMBER_LEN)
+            .map(|_| {
+                let i = rng.gen_range(0, CHARSET.len());
+                return CHARSET[i] as char;
+            })
+            .collect();
+        return card_number;
+    }
 
     pub fn create_card(conn: db::DbConn, user_id: &str) -> Result<models::Card, postgres::Error> {
         let id = Uuid::new_v4();
-        let card_number = String::from(user_id.to_owned() + "asdadsa");
+        let card_number = generate_card_number();
         let res = conn.query(
             "INSERT INTO cards (
                 id,
