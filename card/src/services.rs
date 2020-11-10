@@ -1,40 +1,23 @@
 pub mod card {
     use crate::db;
-    use crate::models;
-    use rand::Rng;
+    use crate::models::card::{generate_card_number, Card};
     use uuid::Uuid;
 
-    fn generate_card_number() -> String {
-        const CHARSET: &[u8] = b"0123456789";
-        const CARD_NUMBER_LEN: usize = 12;
-
-        let mut rng = rand::thread_rng();
-
-        let card_number: String = (0..CARD_NUMBER_LEN)
-            .map(|_| {
-                let i = rng.gen_range(0, CHARSET.len());
-                return CHARSET[i] as char;
-            })
-            .collect();
-        return card_number;
-    }
-
-    pub fn list_card(conn: db::DbConn) -> Result<Vec<models::Card>, postgres::Error> {
+    pub fn list_card(conn: db::DbConn) -> Result<Vec<Card>, postgres::Error> {
         let res = conn.query("SELECT * from cards", &[]);
 
-        let mut cards: Vec<models::Card> = Vec::new();
+        let mut cards: Vec<Card> = Vec::new();
 
         match res {
             Ok(rows) => {
                 for row in &rows {
-                    let card = models::Card {
+                    cards.push(Card {
                         id: row.get(0),
                         user_id: row.get(1),
                         number: row.get(2),
                         created_at: row.get(3),
                         updated_at: row.get(4),
-                    };
-                    cards.push(card);
+                    });
                 }
                 Ok(cards)
             }
@@ -43,7 +26,7 @@ pub mod card {
         }
     }
 
-    pub fn create_card(conn: db::DbConn, user_id: &str) -> Result<models::Card, postgres::Error> {
+    pub fn create_card(conn: db::DbConn, user_id: &str) -> Result<Card, postgres::Error> {
         let id = Uuid::new_v4();
         let card_number = generate_card_number();
         let res = conn.query(
@@ -60,7 +43,7 @@ pub mod card {
         match res {
             Ok(rows) => {
                 let row = rows.iter().next().unwrap();
-                Ok(models::Card {
+                Ok(Card {
                     id: row.get(0),
                     user_id: row.get(1),
                     number: row.get(2),
@@ -73,5 +56,22 @@ pub mod card {
                 Err(e)
             }
         }
+    }
+}
+
+// credit: https://github.com/serde-rs/serde/issues/1151
+pub mod datetime_serializer {
+    use chrono::naive::NaiveDateTime;
+    use chrono::{DateTime, Utc};
+    use serde::{Serialize, Serializer};
+    fn time_to_json(t: NaiveDateTime) -> String {
+        DateTime::<Utc>::from_utc(t, Utc).to_rfc3339()
+    }
+
+    pub fn serialize<S: Serializer>(
+        time: &NaiveDateTime,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error> {
+        time_to_json(time.clone()).serialize(serializer)
     }
 }

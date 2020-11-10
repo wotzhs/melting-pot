@@ -1,5 +1,5 @@
 use crate::db;
-use crate::models::CreateCardRequest;
+use crate::models::card::CreateCardRequest;
 use crate::services::card;
 use rocket_contrib::json::Json;
 use rocket_contrib::json::JsonValue;
