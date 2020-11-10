@@ -6,8 +6,17 @@ use rocket_contrib::json::JsonValue;
 use std::error::Error;
 
 #[get("/")]
-pub fn list_card() -> &'static str {
-    "Hello World"
+pub fn list_card() -> JsonValue {
+    let res = card::list_card();
+    match res {
+        Ok(cards) => json!(cards),
+        Err(e) => {
+            println!("list_card() err: {}", e);
+            json!({
+                "message": Error::to_string(&e),
+            })
+        }
+    }
 }
 
 #[post("/", format = "json", data = "<req>")]

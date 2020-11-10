@@ -19,6 +19,8 @@ pub mod card {
         return card_number;
     }
 
+    pub fn list_card() -> Result<models::Card, postgres::Error> {}
+
     pub fn create_card(conn: db::DbConn, user_id: &str) -> Result<models::Card, postgres::Error> {
         let id = Uuid::new_v4();
         let card_number = generate_card_number();
