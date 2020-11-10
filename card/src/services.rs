@@ -19,7 +19,29 @@ pub mod card {
         return card_number;
     }
 
-    pub fn list_card() -> Result<models::Card, postgres::Error> {}
+    pub fn list_card(conn: db::DbConn) -> Result<Vec<models::Card>, postgres::Error> {
+        let res = conn.query("SELECT * from cards", &[]);
+
+        let mut cards: Vec<models::Card> = Vec::new();
+
+        match res {
+            Ok(rows) => {
+                for row in &rows {
+                    let card = models::Card {
+                        id: row.get(0),
+                        user_id: row.get(1),
+                        number: row.get(2),
+                        created_at: row.get(3),
+                        updated_at: row.get(4),
+                    };
+                    cards.push(card);
+                }
+                Ok(cards)
+            }
+
+            Err(e) => Err(e),
+        }
+    }
 
     pub fn create_card(conn: db::DbConn, user_id: &str) -> Result<models::Card, postgres::Error> {
         let id = Uuid::new_v4();
