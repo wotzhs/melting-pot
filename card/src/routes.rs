@@ -6,8 +6,8 @@ use rocket_contrib::json::JsonValue;
 use std::error::Error;
 
 #[get("/")]
-pub fn list_card() -> JsonValue {
-    let res = card::list_card();
+pub fn list_card(conn: db::DbConn) -> JsonValue {
+    let res = card::list_card(conn);
     match res {
         Ok(cards) => json!(cards),
         Err(e) => {
