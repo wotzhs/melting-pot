@@ -31,5 +31,8 @@ pub fn rocket() -> rocket::Rocket {
     return rocket::ignite()
         .register(catchers![not_found, unprocessable_entity])
         .attach(db::DbConn::fairing())
-        .mount("/", routes![routes::list_card, routes::create_card,]);
+        .mount(
+            "/",
+            routes![routes::list_card, routes::create_card, routes::get_card],
+        );
 }
