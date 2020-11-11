@@ -1,6 +1,8 @@
 pub mod card {
     use crate::db;
     use crate::models::card::{generate_card_number, Card};
+    use rocket::http::RawStr;
+    use std::error;
     use uuid::Uuid;
 
     pub fn list_card(conn: db::DbConn) -> Result<Vec<Card>, postgres::Error> {
@@ -23,6 +25,29 @@ pub mod card {
             }
 
             Err(e) => Err(e),
+        }
+    }
+
+    pub fn get_card(conn: db::DbConn, id: &RawStr) -> Result<Card, Box<dyn error::Error>> {
+        let parsed = Uuid::parse_str(id);
+        if parsed.is_err() {
+            return Err(From::from("invalid card id"));
+        }
+
+        let res = conn.query("SELECT * from cards WHERE id=$1", &[&parsed.unwrap()]);
+
+        match res {
+            Ok(rows) => {
+                let row = rows.iter().next().unwrap();
+                Ok(Card {
+                    id: row.get(0),
+                    user_id: row.get(1),
+                    number: row.get(2),
+                    created_at: row.get(3),
+                    updated_at: row.get(4),
+                })
+            }
+            Err(e) => Err(Box::new(e)),
         }
     }
 
@@ -51,10 +76,7 @@ pub mod card {
                     updated_at: row.get(4),
                 })
             }
-            Err(e) => {
-                println!("create_card() err: {:?}", e);
-                Err(e)
-            }
+            Err(e) => Err(e),
         }
     }
 }
