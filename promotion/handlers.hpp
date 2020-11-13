@@ -12,7 +12,7 @@ class Handlers {
 public:
 	static auto HandlePromoCodeValidation() {
 		return [](auto *res, auto *req) {
-			std::string_view code = req->getQuery("promo");
+			std::string_view code = req->getQuery("code");
 
 			if (!code.size()) {
 				res->end(json{{"status", false}}.dump());
