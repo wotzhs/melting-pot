@@ -1,3 +1,4 @@
+#include <iostream>
 #include "handlers.hpp"
 
 const int port = 5004;
