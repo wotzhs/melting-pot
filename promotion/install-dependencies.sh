@@ -1,9 +1,8 @@
-apk add make zlib-dev cmake
+mkdir -p /usr/local/include/nlohmann
 
 wget -O uSockets.zip https://github.com/uNetworking/uSockets/archive/master.zip
 wget -O uWebSockets.zip https://github.com/uNetworking/uWebSockets/archive/master.zip
-
-mkdir -p /usr/local/include
+wget -O /usr/local/include/nlohmann/json.hpp  https://github.com/nlohmann/json/releases/download/v3.9.1/json.hpp
 
 unzip uSockets.zip
 unzip uWebSockets.zip
