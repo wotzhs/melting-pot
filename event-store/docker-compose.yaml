@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  db:
+    image: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      
+volumes:
+  db:
