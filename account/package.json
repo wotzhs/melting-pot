@@ -7,6 +7,7 @@
     "@types/mongoose": "^5.7.37",
     "express": "^4.17.1",
     "grpc": "^1.24.4",
+    "grpc-tools": "^1.9.1",
     "grpc_tools_node_protoc_ts": "^5.0.1",
     "mongoose": "^5.10.11",
     "swagger-ui-express": "^4.1.4"
