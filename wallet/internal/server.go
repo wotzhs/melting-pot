@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"log"
+	"melting_pot/wallet/internal/clients"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +14,11 @@ import (
 const port string = ":5001"
 
 func StartServer() {
+	clients := clients.RegisterGRPCClients()
+	for _, client := range clients {
+		defer client.Close()
+	}
+
 	server := &http.Server{
 		Addr:    port,
 		Handler: router,
