@@ -1,6 +1,8 @@
 import { model } from "mongoose";
 import { Schema } from "./models";
 import { IApiError } from "./interfaces";
+import Clients from "./clients";
+import { Event } from "../proto/event_store/event_store_pb";
 
 export class AccountService {
   private accountsModel: any;
@@ -13,7 +15,22 @@ export class AccountService {
       const account = await this.accountsModel.create({
         fullname: req.body.fullname,
       });
-      return [{ _id: account._id }, null];
+
+      const event = new Event();
+      event.setName("account_created");
+      event.setAggregateId(account._id);
+      event.setAggregateType("user");
+      event.setData(JSON.stringify(account));
+
+      return await new Promise((resolve, reject) => {
+        Clients.EventStore.publish(event, (err, resp) => {
+          if (err) {
+            reject(err);
+          }
+          console.log("procesed event:", resp.toObject());
+          resolve([{ _id: account._id }, null]);
+        });
+      });
     } catch (err) {
       return [
         null,
