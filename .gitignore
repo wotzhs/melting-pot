@@ -1,2 +1,3 @@
 tags.*
 proto/event_store/event_store.pb.go
+proto/*/*.d.ts
