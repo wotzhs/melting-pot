@@ -18,4 +18,4 @@ $(STUB): $(SRCS)
 		--ts_out=generate_package_definition:${GENERATED_PROTO_OUTDIR} \
 		$<
 clean:
-	rm -rf ${GENERATED_PROTO_OUTDIR} ${STUB}
+	rm -rf ${GENERATED_PROTO_OUTDIR}
