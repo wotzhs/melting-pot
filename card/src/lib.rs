@@ -6,7 +6,10 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
+mod clients;
 mod db;
+mod event_store;
+mod event_store_grpc;
 mod models;
 mod routes;
 mod services;
