@@ -14,6 +14,7 @@ COMPILED_OBJECTS=${wildcard *.o}
 BIN_NAME=promotion
 
 build: clean stub ${PROTO_OBJECT} main
+	@echo "completed building, now run make link"
 
 stub: ${SRCS}
 	@mkdir ${GENERATED_PROTO_OUTDIR}
@@ -42,6 +43,7 @@ link: ${COMPILED_OBJECTS}
 	-I/usr/local/include/uWebSockets \
 	${LDFLAGS} \
 	-o ${BIN_NAME}
+	@echo "completed linking, now run ./promotion to start the service"
 
 clean:
 	rm -rf ${GENERATED_PROTO_OUTDIR} ${COMPILED_OBJECTS} ${BIN_NAME}
