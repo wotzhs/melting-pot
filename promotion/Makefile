@@ -1,6 +1,6 @@
 .PHONY: default
 
-SRCS=${wildcard ./../proto/*/*.proto}
+SRCS=${wildcard ./../proto/**/*.proto}
 GENERATED_PROTO_OUTDIR=proto
 
 PROTO_LIBS=${wildcard proto/**/*.cc}
@@ -13,10 +13,8 @@ LDFLAGS=`pkg-config --libs protobuf grpc++`
 COMPILED_OBJECTS=${wildcard *.o}
 BIN_NAME=promotion
 
-build: clean stub ${PROTO_OBJECT} main
-	@echo "completed building, now run make link"
-
 stub: ${SRCS}
+	@rm -rf ${GENERATED_PROTO_OUTDIR}
 	@mkdir ${GENERATED_PROTO_OUTDIR}
 	@protoc \
 	-I../proto \
@@ -25,6 +23,9 @@ stub: ${SRCS}
 	--grpc_out=${GENERATED_PROTO_OUTDIR} \
 	--cpp_out=${GENERATED_PROTO_OUTDIR} \
 	$<
+
+build: clean ${PROTO_OBJECT} main
+	@echo "completed building, now run make link"
 
 ${PROTO_OBJECT}: ${PROTO_LIBS}
 	@${CXX} ${CXXFLAGS} ${CPPFLAGS} \
@@ -46,4 +47,4 @@ link: ${COMPILED_OBJECTS}
 	@echo "completed linking, now run ./promotion to start the service"
 
 clean:
-	rm -rf ${GENERATED_PROTO_OUTDIR} ${COMPILED_OBJECTS} ${BIN_NAME}
+	rm -rf ${COMPILED_OBJECTS} ${BIN_NAME}
