@@ -8,6 +8,7 @@ This service manages the promotion rules.
 
 ```shell
 make
+make build
 make link
 ```
 
