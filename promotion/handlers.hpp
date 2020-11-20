@@ -27,7 +27,7 @@ public:
 				event.set_name("promotion_applied");
 				event.set_aggregate_id("");
 				event.set_aggregate_type("");
-				event.set_data("");
+				event.set_data("{}");
 				event_store::EventResponse reply;
 				grpc::Status res = eventPublisher.Publish(event, &reply);
 				if (res.ok())  {
