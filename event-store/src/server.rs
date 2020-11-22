@@ -1,6 +1,7 @@
 use tonic::transport::Server;
 
 use event_store::event_store_server::EventStoreServer;
+use ratsio::{StanClient, StanOptions};
 
 mod db;
 mod procedures;
@@ -13,7 +14,14 @@ pub mod event_store {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
-    let event_store = procedures::EventStore::default();
+
+    let client_id = "event-store";
+    let opts = StanOptions::with_options("localhost:4222", "melting-pot", &client_id[..]);
+
+    let event_store = procedures::EventStore {
+        sc: StanClient::from_options(opts).await.unwrap(),
+    };
+
     println!("Event Store service listening at: {}", addr);
 
     Server::builder()
