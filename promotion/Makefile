@@ -34,12 +34,17 @@ ${PROTO_OBJECT}: %.o : %.cc
 	 $<
 
 main:
-	@${CXX} ${CXXFLAGS} ${CPPFLAGS} -I./${GENERATED_PROTO_OUTDIR} -c -o main.o main.cpp
+	${CXX} -DNATS_HAS_STREAMING=true \
+	${CXXFLAGS} ${CPPFLAGS} \
+	-I./${GENERATED_PROTO_OUTDIR} \
+	-c -o main.o main.cpp
 
 link: ${COMPILED_OBJECTS}
 	@${CXX} ${CXXFLAGS} \
 	$^ \
 	-l:uSockets.a \
+	-L/usr/local/lib \
+	-lnats \
 	-lz \
 	-I/usr/local/include/uWebSockets \
 	${LDFLAGS} \
