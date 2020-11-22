@@ -2,12 +2,14 @@ use crate::event_store;
 use crate::services;
 use event_store::{event_store_server, Event, EventResponse};
 use ratsio::StanClient;
+use std::collections::HashMap;
 use std::error::Error;
 use std::sync::Arc;
 use tonic::{Code, Request, Response, Status};
 
 pub struct EventStore {
     pub sc: Arc<StanClient>,
+    pub subjects: HashMap<String, String>,
 }
 
 #[tonic::async_trait]
@@ -27,13 +29,20 @@ impl event_store_server::EventStore for EventStore {
 
         let event_data_value: serde_json::Value = event_data.unwrap();
 
-        let result = services::event_store::save_event(event, event_data_value).await;
+        let result = services::event_store::save_event(&event, event_data_value).await;
 
         if (result.is_err()) {
             return Err(Status::new(
                 Code::Internal,
                 Error::to_string(&result.unwrap_err()),
             ));
+        }
+
+        if let Some(subject) = self.subjects.get(&event.name) {
+            match self.sc.publish(subject, event.data.as_bytes()).await {
+                Ok(_) => println!("published event: {:?}", event),
+                Err(e) => println!("failed to publish event: {:?} error: {:?}", event, e),
+            }
         }
 
         let reply = event_store::EventResponse {
