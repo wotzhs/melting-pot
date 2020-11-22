@@ -3,6 +3,7 @@ use tonic::transport::Server;
 use event_store::event_store_server::EventStoreServer;
 
 mod db;
+mod procedures;
 mod services;
 
 pub mod event_store {
@@ -12,7 +13,7 @@ pub mod event_store {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
-    let event_store = services::EventStoreService::default();
+    let event_store = procedures::EventStore::default();
     println!("Event Store service listening at: {}", addr);
 
     Server::builder()
