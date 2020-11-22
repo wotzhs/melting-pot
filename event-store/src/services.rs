@@ -1,12 +1,13 @@
 use crate::db;
 use crate::event_store as event_store_proto;
 use event_store_proto::Event;
+use std::collections::HashMap;
 
 pub mod event_store {
     use super::*;
 
     pub async fn save_event(
-        event: Event,
+        event: &Event,
         event_data: serde_json::Value,
     ) -> Result<Vec<u8>, tokio_postgres::Error> {
         let pool = db::create_pool().await;
@@ -33,5 +34,17 @@ pub mod event_store {
         }
 
         Ok(rows.unwrap().iter().next().unwrap().get(0))
+    }
+
+    pub fn get_subjects() -> HashMap<String, String> {
+        let mut subjects = HashMap::new();
+        subjects.insert("account_created".to_string(), "account.created".to_string());
+        subjects.insert("card_Created".to_string(), "card.created".to_string());
+        subjects.insert("wallet_created".to_string(), "wallet.created".to_string());
+        subjects.insert(
+            "promotion_applied".to_string(),
+            "promotion.applied".to_string(),
+        );
+        return subjects;
     }
 }
