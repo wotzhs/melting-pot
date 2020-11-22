@@ -1,11 +1,14 @@
 use crate::event_store;
 use crate::services;
 use event_store::{event_store_server, Event, EventResponse};
+use ratsio::StanClient;
 use std::error::Error;
+use std::sync::Arc;
 use tonic::{Code, Request, Response, Status};
 
-#[derive(Debug, Default)]
-pub struct EventStore {}
+pub struct EventStore {
+    pub sc: Arc<StanClient>,
+}
 
 #[tonic::async_trait]
 impl event_store_server::EventStore for EventStore {
