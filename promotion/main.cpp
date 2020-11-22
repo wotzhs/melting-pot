@@ -8,7 +8,7 @@ int main() {
 	const char  *clusterName = "melting-pot";
 	const char  *clientID    = "promotion";
 
-	std::unique_ptr<Stan> stan = std::unique_ptr<Stan>(new Stan(
+	std::unique_ptr<clients::Stan> stan = std::unique_ptr<clients::Stan>(new clients::Stan(
 		nOpts, 
 		clusterName, 
 		clientID
