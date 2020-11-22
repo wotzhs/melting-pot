@@ -1,6 +1,5 @@
 #include <iostream>
 #include "handlers.hpp"
-#include "workers.hpp"
 
 const int port = 5004;
 
