@@ -31,6 +31,13 @@ public:
 		stanConnOptions_Destroy(connOpts);
 	}
 
+	~Stan() {
+		stanSubscription_Close(sub);
+		stanSubscription_Destroy(sub);
+		stanConnection_Destroy(sc);
+		nats_Close();
+	}
+
 	void Subscribe(const char* durableName, const char* subject) {
 		if (s == NATS_OK) {
 			s = stanSubOptions_Create(&subOpts);
@@ -47,6 +54,8 @@ public:
 		if (s == NATS_OK) {
 			s = stanConnection_Subscribe(&sub, sc, subject, onMessage, NULL, subOpts);
 		}
+
+		stanSubOptions_Destroy(subOpts);
 	}
 
 private:
