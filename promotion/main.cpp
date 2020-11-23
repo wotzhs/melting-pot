@@ -1,5 +1,7 @@
 #include <iostream>
+#include <nats/nats.h>
 #include "handlers.hpp"
+#include "clients/stan.hpp"
 
 const int port = 5004;
 
