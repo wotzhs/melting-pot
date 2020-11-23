@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <string_view>
 #include "services.hpp"
-#include "clients/clients.hpp"
+#include "clients/event-store.hpp"
 
 using json = nlohmann::json;
 using EventStore = clients::EventStore;
