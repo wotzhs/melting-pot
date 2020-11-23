@@ -8,6 +8,29 @@ services:
       - db:/var/lib/postgresql/data
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-      
+  nats-streaming-db:
+    image: postgres
+    volumes:
+      - nats_streaming_db:/var/lib/postgresql/data
+      - $PWD/pg-init-scripts:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  nats-streaming:
+    image: nats-streaming:linux
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command:
+      - "--cluster_id=melting-pot"
+      - "--store=SQL"
+      - "--sql_driver=postgres"
+      - "--sql_source=postgres://postgres@nats-streaming-db/postgres?sslmode=disable"
+      - "--sql_no_caching=true"
+      - "--sql_max_open_conns=80"
+      - "--http_port=8222"
+    restart: on-failure
+
 volumes:
+  nats_streaming_db:
   db:

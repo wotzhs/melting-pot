@@ -27,19 +27,24 @@ stub: ${SRCS}
 build: clean ${PROTO_OBJECT} main
 	@echo "completed building, now run make link"
 
-${PROTO_OBJECT}: ${PROTO_LIBS}
-	@${CXX} ${CXXFLAGS} ${CPPFLAGS} \
+${PROTO_OBJECT}: %.o : %.cc
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} \
 	 -I./${GENERATED_PROTO_OUTDIR} \
 	 -c -o ${notdir $@} \
-	 ${basename $@}.cc
+	 $<
 
 main:
-	@${CXX} ${CXXFLAGS} ${CPPFLAGS} -I./${GENERATED_PROTO_OUTDIR} -c -o main.o main.cpp
+	${CXX} -DNATS_HAS_STREAMING=true \
+	${CXXFLAGS} ${CPPFLAGS} \
+	-I./${GENERATED_PROTO_OUTDIR} \
+	-c -o main.o main.cpp
 
 link: ${COMPILED_OBJECTS}
 	@${CXX} ${CXXFLAGS} \
 	$^ \
 	-l:uSockets.a \
+	-L/usr/local/lib \
+	-lnats \
 	-lz \
 	-I/usr/local/include/uWebSockets \
 	${LDFLAGS} \

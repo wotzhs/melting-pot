@@ -1,26 +1,15 @@
 use crate::db;
-use crate::event_store;
-use event_store::event_store_server::EventStore;
-use event_store::{Event, EventResponse};
-use tonic::{Request, Response, Status};
+use crate::event_store as event_store_proto;
+use event_store_proto::Event;
+use std::collections::HashMap;
 
-#[derive(Debug, Default)]
-pub struct EventStoreService {}
+pub mod event_store {
+    use super::*;
 
-#[tonic::async_trait]
-impl EventStore for EventStoreService {
-    async fn publish(&self, request: Request<Event>) -> Result<Response<EventResponse>, Status> {
-        println!("Got a request: {:?}", request);
-
-        let Event {
-            name,
-            aggregate_id,
-            aggregate_type,
-            data,
-        } = &request.into_inner();
-
-        let event_data: serde_json::Value = serde_json::from_str(data).unwrap();
-
+    pub async fn save_event(
+        event: &Event,
+        event_data: serde_json::Value,
+    ) -> Result<Vec<u8>, tokio_postgres::Error> {
         let pool = db::create_pool().await;
         let conn = pool.get().await.unwrap();
         let rows = conn
@@ -32,22 +21,30 @@ impl EventStore for EventStoreService {
                 ",
                 &[
                     &ulid::Ulid::new().to_string().as_bytes(),
-                    &name,
-                    &aggregate_id,
-                    &aggregate_type,
+                    &event.name,
+                    &event.aggregate_id,
+                    &event.aggregate_type,
                     &event_data,
                 ],
             )
-            .await
-            .unwrap();
+            .await;
 
-        let id: Vec<u8> = rows.iter().next().unwrap().get(0);
+        if rows.is_err() {
+            return Err(rows.unwrap_err());
+        }
 
-        let reply = event_store::EventResponse {
-            event_id: String::from_utf8_lossy(&id).to_string(),
-            error: String::from(""),
-        };
+        Ok(rows.unwrap().iter().next().unwrap().get(0))
+    }
 
-        Ok(Response::new(reply))
+    pub fn get_subjects() -> HashMap<String, String> {
+        let mut subjects = HashMap::new();
+        subjects.insert("account_created".to_string(), "account.created".to_string());
+        subjects.insert("card_Created".to_string(), "card.created".to_string());
+        subjects.insert("wallet_created".to_string(), "wallet.created".to_string());
+        subjects.insert(
+            "promotion_applied".to_string(),
+            "promotion.applied".to_string(),
+        );
+        return subjects;
     }
 }

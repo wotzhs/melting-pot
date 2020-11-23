@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <grpc++/create_channel.h>
-#include "proto/event_store/event_store.grpc.pb.h"
-#include "proto/event_store/event_store.pb.h"
+#include "../proto/event_store/event_store.grpc.pb.h"
+#include "../proto/event_store/event_store.pb.h"
 
 using namespace grpc;
 
@@ -22,7 +22,8 @@ public:
 		ClientContext ctx;
 		return stub_->Publish(&ctx, event, resp);
 	}
-};
+}; // EvcentStore
+
 
 }; // clients
 
