@@ -30,6 +30,13 @@ fn unprocessable_entity() -> JsonValue {
     })
 }
 
+pub async fn stan_connect() {
+    clients::stan::Stan::default()
+        .subscribes()
+        .await
+        .expect("failed to connect to nats streaming server");
+}
+
 pub fn rocket() -> rocket::Rocket {
     return rocket::ignite()
         .register(catchers![not_found, unprocessable_entity])
