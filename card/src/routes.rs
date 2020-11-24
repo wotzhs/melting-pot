@@ -48,7 +48,7 @@ pub fn create_card(conn: db::DbConn, req: Json<CreateCardRequest>) -> JsonValue 
             event.set_aggregate_type("test".to_string());
             event.set_data(json!(card).to_string());
 
-            let client = clients::event_store();
+            let client = clients::event_store::event_store();
             let res = client.publish(&event);
             if res.is_err() {
                 return json!({"message": Error::to_string(&res.unwrap_err())});
