@@ -16,6 +16,8 @@ rand = "0.7.3"
 grpcio = "0.7.0"
 protobuf = "2.18.0"
 futures = "0.3.8"
+ratsio = "0.3.0-alpha.6"
+tokio = { version = "0.2", features = ["full"] }
 
 [dependencies.rocket_contrib]
 version = "0.4.5"
