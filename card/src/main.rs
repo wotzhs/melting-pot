@@ -1,5 +1,7 @@
 use card;
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    card::stan_connect().await;
     card::rocket().launch();
 }
