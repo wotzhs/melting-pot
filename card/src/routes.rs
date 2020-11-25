@@ -1,6 +1,4 @@
-use crate::clients;
 use crate::db;
-use crate::event_store;
 use crate::models::card::CreateCardRequest;
 use crate::services::card;
 use rocket::http::RawStr;
@@ -41,23 +39,7 @@ pub fn create_card(conn: db::DbConn, req: Json<CreateCardRequest>) -> JsonValue 
     let res = card::create_card(conn, &req.user_id);
 
     match res {
-        Ok(card) => {
-            let mut event = event_store::Event::new();
-            event.set_name("card_created".to_string());
-            event.set_aggregate_id("test".to_string());
-            event.set_aggregate_type("test".to_string());
-            event.set_data(json!(card).to_string());
-
-            let client = clients::event_store::event_store();
-            let res = client.publish(&event);
-            if res.is_err() {
-                return json!({"message": Error::to_string(&res.unwrap_err())});
-            }
-            println!("processed event: {:?}", res.unwrap());
-            json!(card)
-        }
-        Err(e) => json!({
-            "message": Error::to_string(&e),
-        }),
+        Ok(card) => json!(card),
+        Err(e) => json!({ "message": Error::to_string(&e) }),
     }
 }
