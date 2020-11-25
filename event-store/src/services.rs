@@ -39,7 +39,7 @@ pub mod event_store {
     pub fn get_subjects() -> HashMap<String, String> {
         let mut subjects = HashMap::new();
         subjects.insert("account_created".to_string(), "account.created".to_string());
-        subjects.insert("card_Created".to_string(), "card.created".to_string());
+        subjects.insert("card_created".to_string(), "card.created".to_string());
         subjects.insert("wallet_created".to_string(), "wallet.created".to_string());
         subjects.insert(
             "promotion_applied".to_string(),
