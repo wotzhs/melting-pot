@@ -13,6 +13,7 @@ mod event_store_grpc;
 mod models;
 mod routes;
 mod services;
+mod workers;
 
 use rocket_contrib::json::JsonValue;
 
@@ -30,9 +31,9 @@ fn unprocessable_entity() -> JsonValue {
     })
 }
 
-pub async fn stan_connect() {
+pub async fn stan_connect(rocket: rocket::Rocket) {
     clients::stan::Stan::default()
-        .subscribes()
+        .subscribes(rocket)
         .await
         .expect("failed to connect to nats streaming server");
 }
