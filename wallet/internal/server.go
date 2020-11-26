@@ -14,10 +14,14 @@ import (
 const port string = ":5001"
 
 func StartServer() {
-	clients := clients.RegisterGRPCClients()
-	for _, client := range clients {
+	GRPCclients := clients.RegisterGRPCClients()
+	for _, client := range GRPCclients {
 		defer client.Close()
 	}
+
+	stan := &clients.Stan{}
+	stan.Default()
+	stan.Subsribes()
 
 	server := &http.Server{
 		Addr:    port,
