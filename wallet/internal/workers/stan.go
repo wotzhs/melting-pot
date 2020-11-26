@@ -15,7 +15,7 @@ type Stan struct {
 	EvenStoreClient event_store.EventStoreClient
 }
 
-func (w *Stan) HandleAccountCreated(m *stan.Msg) {
+func (w *Stan) HandleUserCreated(m *stan.Msg) {
 	var eventData struct {
 		UserID string `json:"user_id"`
 	}

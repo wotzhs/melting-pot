@@ -10,7 +10,7 @@ pub struct Workers {
 }
 
 impl Workers {
-    pub async fn handle_account_created(self, message: String, conn: db::DbConn) {
+    pub async fn handle_user_created(self, message: String, conn: db::DbConn) {
         let event_data: serde_json::Value = match serde_json::from_str(&message) {
             Ok(data) => data,
             Err(e) => {

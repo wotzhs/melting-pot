@@ -32,13 +32,13 @@ impl Stan {
             event_store_client: EventStore::default().client,
         };
 
-        let account_created_subject = "account.created";
+        let user_created_subject = "user.created";
         let queue_group = None;
-        let durable_name = Some("durable_account_created");
+        let durable_name = Some("durable_user_created");
 
         let (sid, mut subscription) = self
             .client
-            .subscribe(account_created_subject, queue_group, durable_name)
+            .subscribe(user_created_subject, queue_group, durable_name)
             .await?;
 
         println!("subscribed sid: {:?}", sid);
@@ -54,7 +54,7 @@ impl Stan {
                 let conn = db::DbConn::get_one(&rocket).unwrap();
                 event_workers
                     .clone()
-                    .handle_account_created(payload.to_string(), conn)
+                    .handle_user_created(payload.to_string(), conn)
                     .await;
             }
         });
