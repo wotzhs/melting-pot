@@ -1,13 +1,10 @@
 package internal
 
 import (
-	"context"
 	"encoding/json"
 	"log"
-	"melting_pot/wallet/internal/clients"
 	"melting_pot/wallet/internal/services"
 	"net/http"
-	"proto/event_store"
 )
 
 type CreateWalletRequest struct {
@@ -67,14 +64,6 @@ func Createwallet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-
-	id, err := clients.EventStore.Publish(context.TODO(), &event_store.Event{Name: "wallet_created", AggregateId: reqBody.UserID, AggregateType: "user", Data: string(res)})
-	if err != nil {
-		log.Printf("EventStore.Publish() err: %v", err)
-		return
-	}
-
-	log.Printf("Processed id: %v", id)
 
 	w.Write(res)
 }
