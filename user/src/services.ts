@@ -4,23 +4,23 @@ import { IApiError } from "./interfaces";
 import Clients from "./clients";
 import { Event } from "../proto/event_store/event_store_pb";
 
-export class AccountService {
-  private accountsModel: any;
+export class UserService {
+  private usersModel: any;
   constructor() {
-    this.accountsModel = model("accounts", Schema.Account);
+    this.usersModel = model("users", Schema.User);
   }
 
-  async CreateAccount(req): Promise<[object | null, IApiError | null]> {
+  async CreateUser(req): Promise<[object | null, IApiError | null]> {
     try {
-      const account = await this.accountsModel.create({
+      const user = await this.usersModel.create({
         fullname: req.body.fullname,
       });
 
       const event = new Event();
-      event.setName("account_created");
-      event.setAggregateId(account._id);
+      event.setName("user_created");
+      event.setAggregateId(user._id);
       event.setAggregateType("user");
-      event.setData(JSON.stringify(account));
+      event.setData(JSON.stringify(user));
 
       return await new Promise((resolve, reject) => {
         Clients.EventStore.publish(event, (err, resp) => {
@@ -28,7 +28,7 @@ export class AccountService {
             reject(err);
           }
           console.log("procesed event:", resp.toObject());
-          resolve([{ _id: account._id }, null]);
+          resolve([{ _id: user._id }, null]);
         });
       });
     } catch (err) {
@@ -43,10 +43,10 @@ export class AccountService {
     }
   }
 
-  async ListAccounts(req): Promise<[object[] | null, IApiError | null]> {
+  async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
     try {
-      const accounts = await this.accountsModel.find();
-      return [accounts, null];
+      const users = await this.usersModel.find();
+      return [users, null];
     } catch (err) {
       return [
         null,
