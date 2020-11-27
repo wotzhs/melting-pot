@@ -34,7 +34,7 @@ impl Stan {
 
         let user_created_subject = "user_created";
         let queue_group = None;
-        let durable_name = Some("durable_user_created");
+        let durable_name = Some("durable-card");
 
         let (sid, mut subscription) = self
             .client
