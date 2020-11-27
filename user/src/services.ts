@@ -20,12 +20,17 @@ export class UserService {
       event.setName("user_created");
       event.setAggregateId(user._id);
       event.setAggregateType("user");
-      event.setData(JSON.stringify(user));
+      event.setData(
+        JSON.stringify({
+          ...user.toJSON(),
+          code: req.body.code,
+        })
+      );
 
       return await new Promise((resolve, reject) => {
         Clients.EventStore.publish(event, (err, resp) => {
           if (err) {
-            reject(err);
+            return reject(err);
           }
           console.log("procesed event:", resp.toObject());
           resolve([{ _id: user._id }, null]);
