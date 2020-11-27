@@ -25,8 +25,8 @@ namespace workers {
 
 			event_store::Event event;
 			event.set_name("promotion_applied");
-			event.set_aggregate_id(eventData["aggregate_id"]);
-			event.set_aggregate_type(eventData["aggregate_type"]);
+			event.set_aggregate_id(eventData["id"]);
+			event.set_aggregate_type("user");
 			event.set_data(promoData.dump());
 			event_store::EventResponse reply;
 
