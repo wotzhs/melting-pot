@@ -78,7 +78,7 @@ private:
 			stanMsg_IsRedelivered(msg) ? "yes" : "no"
 		);
 
-		if (std::string(channel) == "wallet.created") {
+		if (std::string(channel) == "wallet_created") {
 			workers::HandleWalletCreated(stanMsg_GetData(msg));
 		}
 
