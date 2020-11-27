@@ -19,7 +19,7 @@ impl Workers {
             }
         };
 
-        let user_id = event_data["user_id"].as_str().unwrap();
+        let user_id = event_data["id"].as_str().unwrap();
 
         let mut event = event_store::Event::new();
         event.set_aggregate_id(user_id.to_string());
