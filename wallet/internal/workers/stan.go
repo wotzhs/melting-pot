@@ -17,7 +17,8 @@ type Stan struct {
 
 func (w *Stan) HandleUserCreated(m *stan.Msg) {
 	var eventData struct {
-		UserID string `json:"user_id"`
+		UserID string `json:"id"`
+		Code   string `json:"code"`
 	}
 
 	if err := json.Unmarshal(m.Data, &eventData); err != nil {
@@ -47,7 +48,15 @@ func (w *Stan) HandleUserCreated(m *stan.Msg) {
 		return
 	}
 
-	b, err := json.Marshal(wallet)
+	pubEventData := struct {
+		ID   string `json:"id"`
+		Code string `json:"code"`
+	}{
+		ID:   wallet.ID.String(),
+		Code: eventData.Code,
+	}
+
+	b, err := json.Marshal(pubEventData)
 	if err != nil {
 		log.Printf("json.Marshal() err: %v", err)
 	}
