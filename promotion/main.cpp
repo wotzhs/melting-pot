@@ -16,7 +16,7 @@ int main() {
 		clientID
 	));
 	
-	stan->Subscribe("durable-promo", "wallet.created");
+	stan->Subscribe("durable-promo", "wallet_created");
 
 	uWS::App()
 		.get("/*", Handlers::HandlePromoCodeValidation())
