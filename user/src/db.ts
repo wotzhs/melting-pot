@@ -7,6 +7,7 @@ export default class DB {
       {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useCreateIndex: true,
       }
     );
   }
