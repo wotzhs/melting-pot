@@ -6,19 +6,79 @@ export namespace workers {
   export class Stan {
     private userOverviewModel: any;
     constructor() {
-      this.userOverviewModel = model("UserOverview", Schema.UserOverview);
+      this.userOverviewModel = model("useroverview", Schema.UserOverview);
     }
 
-    handleWalletCreated(message: Message) {
-      console.log("received message", message.getSubject(), message.getData());
+    async handleUserCreated(message: Message) {
+      console.log("received message subject:", message.getSubject());
+      console.log("data:", message.getData());
+
+      try {
+        const eventData = JSON.parse(
+          Buffer.from(message.getRawData()).toString()
+        );
+        await this.userOverviewModel.updateOne(
+          { userId: eventData.id },
+          { userId: eventData.id },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
 
-    handleWalletUpdated(message: Message) {
-      console.log("received message", message.getSubject(), message.getData());
+    async handleWalletCreated(message: Message) {
+      console.log("received message subject:", message.getSubject());
+      console.log("data:", message.getData());
+
+      try {
+        const eventData = JSON.parse(
+          Buffer.from(message.getRawData()).toString()
+        );
+        await this.userOverviewModel.updateOne(
+          { userId: eventData.user_id },
+          { walletId: eventData.wallet_id },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
 
-    handleCardCreated(message: Message) {
-      console.log("received message", message.getSubject(), message.getData());
+    async handleWalletUpdated(message: Message) {
+      console.log("received message subject:", message.getSubject());
+      console.log("data:", message.getData());
+
+      try {
+        const eventData = JSON.parse(
+          Buffer.from(message.getRawData()).toString()
+        );
+        await this.userOverviewModel.updateOne(
+          { walletId: eventData.wallet_id },
+          { walletBalance: eventData.balance },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    async handleCardCreated(message: Message) {
+      console.log("received message subject:", message.getSubject());
+      console.log("data:", message.getData());
+
+      try {
+        const eventData = JSON.parse(
+          Buffer.from(message.getRawData()).toString()
+        );
+        await this.userOverviewModel.updateOne(
+          { userId: eventData.user_id },
+          { cardNumber: eventData.number },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }
