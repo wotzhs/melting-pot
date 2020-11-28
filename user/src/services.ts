@@ -1,13 +1,15 @@
 import { model } from "mongoose";
 import { Schema } from "./models";
 import { IApiError } from "./interfaces";
-import Clients from "./clients";
+import { EventStore } from "./clients";
 import { Event } from "../proto/event_store/event_store_pb";
 
 export class UserService {
   private usersModel: any;
+  private eventstoreClient: EventStore;
   constructor() {
     this.usersModel = model("users", Schema.User);
+    this.eventstoreClient = new EventStore();
   }
 
   async CreateUser(req): Promise<[object | null, IApiError | null]> {
@@ -27,15 +29,10 @@ export class UserService {
         })
       );
 
-      return await new Promise((resolve, reject) => {
-        Clients.EventStore.publish(event, (err, resp) => {
-          if (err) {
-            return reject(err);
-          }
-          console.log("procesed event:", resp.toObject());
-          resolve([{ _id: user._id }, null]);
-        });
-      });
+      const resp = await this.eventstoreClient.publish(event);
+      console.log("procesed event:", resp);
+
+      return [{ _id: user._id }, null];
     } catch (err) {
       return [
         null,
