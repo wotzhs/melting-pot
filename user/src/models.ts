@@ -12,14 +12,14 @@ export namespace Schema {
   export const UserOverview = new MongooseSchema(
     {
       userId: ObjectId,
-      fullname: String,
-      walletId: String,
+      fullname: { type: String, index: true },
+      walletId: { type: String, index: true },
       walletBalance: Number,
-      cardNumber: String,
+      cardNumber: { type: String, index: true },
     },
     {
       timestamps: { createdAt: false, updatedAt: true },
-      collection: "UserOverview",
+      collection: "useroverview",
     }
   );
 }
