@@ -28,4 +28,9 @@ func (s *Stan) Subsribes() {
 		log.Printf("received message %v", m)
 		eventWorker.HandleUserCreated(m)
 	}, stan.DurableName("durable-wallet"))
+
+	s.client.Subscribe("promotion_applied", func(m *stan.Msg) {
+		log.Printf("received message %v", m)
+		eventWorker.HandlePromotionApplied(m)
+	}, stan.DurableName("durable-wallet"))
 }
