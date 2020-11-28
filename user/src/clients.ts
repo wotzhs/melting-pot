@@ -38,19 +38,29 @@ export namespace clients {
 
   export class Stan {
     private sc: StanClient;
-    constructor() {
-      const clusterName = "melting-pot";
-      const clientId = "user";
-      const opts: StanOptions = {};
-      this.sc = connect(clusterName, clientId, opts);
-      this.sc.on("connect", this.subscribes);
+    private clusterName: string;
+    private clientId: string;
+    private opts: StanOptions;
+
+    constructor(clusterName?: string, clientId?: string, opts?: StanOptions) {
+      this.clusterName = clusterName || "melting-pot";
+      this.clientId = clientId || "user";
+      this.opts = opts || {};
+    }
+
+    connectAndSubscribes() {
+      this.sc = connect(this.clusterName, this.clientId, this.opts);
+      this.sc.on("connect", () => {
+        this.subscribes();
+      });
     }
 
     subscribes() {
-      const stanWorker = new workers.Stan(new EventStore());
+      const stanWorker = new workers.Stan();
 
       const opts = this.sc.subscriptionOptions();
-      opts.setDurableName("durable-card");
+      opts.setDeliverAllAvailable();
+      opts.setDurableName("durable-user");
 
       const walletCreatedSub = this.sc.subscribe("wallet_created", opts);
       walletCreatedSub.on("message", stanWorker.handleWalletCreated);
