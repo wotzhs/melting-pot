@@ -13,7 +13,7 @@ export namespace Schema {
     {
       userId: ObjectId,
       fullname: String,
-      walletId: ObjectId,
+      walletId: String,
       walletBalance: Number,
       cardNumber: String,
     },
