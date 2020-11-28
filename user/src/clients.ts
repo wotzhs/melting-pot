@@ -62,14 +62,25 @@ export namespace clients {
       opts.setDeliverAllAvailable();
       opts.setDurableName("durable-user");
 
+      const userCreatedSub = this.sc.subscribe("user_created", opts);
+      userCreatedSub.on("message", async (msg) => {
+        stanWorker.handleUserCreated(msg);
+      });
+
       const walletCreatedSub = this.sc.subscribe("wallet_created", opts);
-      walletCreatedSub.on("message", stanWorker.handleWalletCreated);
+      walletCreatedSub.on("message", async (msg) => {
+        stanWorker.handleWalletCreated(msg);
+      });
 
       const walletUpdatedSub = this.sc.subscribe("wallet_updated", opts);
-      walletUpdatedSub.on("message", stanWorker.handleWalletUpdated);
+      walletUpdatedSub.on("message", async (msg) => {
+        stanWorker.handleWalletUpdated(msg);
+      });
 
       const cardCreatedSub = this.sc.subscribe("card_created", opts);
-      cardCreatedSub.on("message", stanWorker.handleCardCreated);
+      cardCreatedSub.on("message", async (msg) => {
+        stanWorker.handleCardCreated(msg);
+      });
     }
   }
 }
