@@ -4,6 +4,7 @@ import { serve, setup } from "swagger-ui-express";
 import Router from "./router";
 import DB from "./db";
 import swaggerSpec from "./swagger.json";
+import { clients } from "./clients";
 
 export class App {
   private app: express.Application;
@@ -22,6 +23,8 @@ export class App {
   }
 
   run() {
+    const stan = new clients.Stan();
+    stan.connectAndSubscribes();
     this.app.listen(this.port, () =>
       console.log(`Running on port ${this.port}`)
     );
