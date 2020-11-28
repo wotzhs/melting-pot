@@ -1,15 +1,15 @@
 import { model } from "mongoose";
 import { Schema } from "./models";
 import { IApiError } from "./interfaces";
-import { EventStore } from "./clients";
+import { clients } from "./clients";
 import { Event } from "../proto/event_store/event_store_pb";
 
 export class UserService {
   private usersModel: any;
-  private eventstoreClient: EventStore;
+  private eventstoreClient: clients.EventStore;
   constructor() {
     this.usersModel = model("users", Schema.User);
-    this.eventstoreClient = new EventStore();
+    this.eventstoreClient = new clients.EventStore();
   }
 
   async CreateUser(req): Promise<[object | null, IApiError | null]> {
