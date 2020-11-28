@@ -1,11 +1,26 @@
 import { Schema as MongooseSchema } from "mongoose";
+import { ObjectId } from "mongodb";
 
 export namespace Schema {
   export const User = new MongooseSchema(
     {
-      fullname: { type: String, required: true },
+      fullname: { type: String, required: true, unique: true },
     },
     { timestamps: true, collection: "users" }
+  );
+
+  export const UserOverview = new MongooseSchema(
+    {
+      userId: ObjectId,
+      fullname: String,
+      walletId: ObjectId,
+      walletBalance: Number,
+      cardNumber: String,
+    },
+    {
+      timestamps: { createdAt: false, updatedAt: true },
+      collection: "UserOverview",
+    }
   );
 }
 
