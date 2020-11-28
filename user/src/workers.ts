@@ -1,13 +1,24 @@
 import { Message } from "node-nats-streaming";
-import { clients } from "./clients";
+import { model } from "mongoose";
+import { Schema } from "./models";
 
 export namespace workers {
   export class Stan {
-    constructor(private eventStoreClient: clients.EventStore) {}
-    handleWalletCreated(message: Message) {}
+    private userOverviewModel: any;
+    constructor() {
+      this.userOverviewModel = model("UserOverview", Schema.UserOverview);
+    }
 
-    handleWalletUpdated(message: Message) {}
+    handleWalletCreated(message: Message) {
+      console.log("received message", message.getSubject(), message.getData());
+    }
 
-    handleCardCreated(message: Message) {}
+    handleWalletUpdated(message: Message) {
+      console.log("received message", message.getSubject(), message.getData());
+    }
+
+    handleCardCreated(message: Message) {
+      console.log("received message", message.getSubject(), message.getData());
+    }
   }
 }
