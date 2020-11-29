@@ -1,7 +1,7 @@
 .PHONY: default
 
 SRCS=$(wildcard ./../proto/*/*.proto)
-STUB=$(SRCS:.proto=*.d.ts)
+STUB=$(SRCS:.proto=.d.ts)
 GENERATED_PROTO_OUTDIR=proto
 
 default: clean $(STUB)
