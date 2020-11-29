@@ -3,6 +3,7 @@ import { Schema } from "./models";
 import { IApiError } from "./interfaces";
 import { clients } from "./clients";
 import { Event } from "../proto/event_store/event_store_pb";
+import { ObjectId } from "mongodb";
 
 export class UserService {
   private usersModel: any;
@@ -50,6 +51,24 @@ export class UserService {
   async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
     try {
       const users = await this.userOverviewModel.find();
+      return [users, null];
+    } catch (err) {
+      return [
+        null,
+        {
+          code: 500,
+          type: "Internal",
+          message: err.message,
+        },
+      ];
+    }
+  }
+
+  async GetUser(req): Promise<[object[] | null, IApiError | null]> {
+    try {
+      const users = await this.userOverviewModel.find({
+        userId: new ObjectId(req.params.userId),
+      });
       return [users, null];
     } catch (err) {
       return [
