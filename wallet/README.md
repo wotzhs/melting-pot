@@ -1,6 +1,6 @@
-# Card
+# Walet
 
-This service manages the cards.
+This service manages the wallets.
 
 ## Getting started
 
@@ -10,9 +10,9 @@ This service manages the cards.
 # generate the grpc code from protobuf
 make
 
-# run the migration
-diesel migration run
+# start the databases
+docker-compose up -d
 
 # run the service
-cargo run
+go run cmd/app/main.go
 ```
