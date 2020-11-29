@@ -6,9 +6,11 @@ import { Event } from "../proto/event_store/event_store_pb";
 
 export class UserService {
   private usersModel: any;
+  private userOverviewModel: any;
   private eventstoreClient: clients.EventStore;
   constructor() {
     this.usersModel = model("users", Schema.User);
+    this.userOverviewModel = model("useroverview", Schema.UserOverview);
     this.eventstoreClient = new clients.EventStore();
   }
 
@@ -47,7 +49,7 @@ export class UserService {
 
   async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
     try {
-      const users = await this.usersModel.find();
+      const users = await this.userOverviewModel.find();
       return [users, null];
     } catch (err) {
       return [
