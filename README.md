@@ -1,7 +1,25 @@
 # Melting Pot
 
-This is a project for the demonstration of event-driven architecture + event sourcing vs request driven architecture.
+This is a project for the demonstration of event-driven architecture + event sourcing + CQRS vs request driven architecture.
 
-## Why Melting Pot
+The name Melting Pot is chosen to represent the different languages and technologies used in making this project.
 
-The name Melting Pot refers to the different languages and technologies used in this project.
+## Overview
+
+```
+				   nats	                =------=                    nats
+				    +--------------->   | card |  <------------------+
+				    |   	        =------=                     |
+				    |  	                   |                         |
+				    | 		           | grpc                    |
+                                    v                      v                         v
+=---------------=     <---      =------=    --->    =-------------=    <---    =-----------=
+| other sources |   GET, POST   | user |    grpc    | event-store |    grpc    | promotion |
+=---------------=     --->      =------=            =-------------=            =-----------=
+                                    ^                      ^                         ^
+				    | 			   | grpc                    |
+				    |  			   |                         |
+				    |                 =--------=                     |
+				    +-------------->  | wallet |  <------------------+
+				  nats		      =--------=                    nats
+```
