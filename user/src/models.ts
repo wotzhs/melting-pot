@@ -28,6 +28,10 @@ Schema.User.set("toJSON", {
   transform: idTransformer,
 });
 
+Schema.UserOverview.set("toJSON", {
+  transform: idTransformer,
+});
+
 function idTransformer(doc, ret, opts) {
   ret.id = ret._id;
   delete ret._id;
