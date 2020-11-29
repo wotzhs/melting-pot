@@ -1,29 +1,29 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Account service API",
+    "description": "User service API",
     "version": "1.0.0",
-    "title": "Melting Pot - Account"
+    "title": "Melting Pot - User"
   },
   "host": "localhost:5000",
   "tags": [
     {
-      "name": "Account",
-      "description": "Everything about account"
+      "name": "User",
+      "description": "Everything about user"
     }
   ],
   "schemes": [
     "http"
   ],
   "paths": {
-    "/accounts": {
+    "/users": {
       "post": {
         "tags": [
-          "Account"
+          "User"
         ],
-        "summary": "Add a new account",
+        "summary": "Add a new user",
         "description": "",
-        "operationId": "createAccount",
+        "operationId": "createUser",
         "consumes": [
           "application/json"
         ],
@@ -34,18 +34,18 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Account object that needs to be created",
+            "description": "User object that needs to be created",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateAccountRequest"
+              "$ref": "#/definitions/CreateUserRequest"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Account created",
+            "description": "User created",
             "schema": {
-              "$ref": "#/definitions/CreateAccountResponse"
+              "$ref": "#/definitions/CreateUserResponse"
             }
           },
           "405": {
@@ -58,11 +58,11 @@
       },
       "get": {
         "tags": [
-          "Account"
+          "User"
         ],
-        "summary": "List accounts",
-        "description": "List all accounts",
-        "operationId": "listAccounts",
+        "summary": "List users",
+        "description": "List all users",
+        "operationId": "listUsers",
         "consumes": [
           "application/json",
           "application/xml"
@@ -72,9 +72,9 @@
         ],
         "responses": {
           "200": {
-            "description": "List of accounts successfully retrieved",
+            "description": "List of users successfully retrieved",
             "schema": {
-              "$ref": "#/definitions/ListAccounts"
+              "$ref": "#/definitions/ListUsers"
             }
           },
           "500": {
@@ -88,7 +88,7 @@
     }
   },
   "definitions": {
-    "CreateAccountRequest": {
+    "CreateUserRequest": {
       "type": "object",
       "required": [
         "fullname"
@@ -100,7 +100,7 @@
         }
       }
     },
-    "CreateAccountResponse": {
+    "CreateUserResponse": {
       "type": "object",
       "properties": {
         "id": {
@@ -109,13 +109,13 @@
         }
       }
     },
-    "ListAccounts": {
+    "ListUsers": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Account"
+        "$ref": "#/definitions/User"
       }
     },
-    "Account": {
+    "User": {
       "type": "object",
       "properties": {
         "fullname": {

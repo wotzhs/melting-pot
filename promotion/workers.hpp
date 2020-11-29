@@ -17,6 +17,7 @@ namespace workers {
 		std::pair<bool, int> status = Services::ValidatePromoCode(code);
 		if (status.first) {
 			json promoData = {
+				{"wallet_id", eventData["wallet_id"]},
 				{"status", status.first},
 				{"reward", status.second},
 			};
@@ -25,8 +26,8 @@ namespace workers {
 
 			event_store::Event event;
 			event.set_name("promotion_applied");
-			event.set_aggregate_id(eventData["aggregate_id"]);
-			event.set_aggregate_type(eventData["aggregate_type"]);
+			event.set_aggregate_id(eventData["user_id"]);
+			event.set_aggregate_type("user");
 			event.set_data(promoData.dump());
 			event_store::EventResponse reply;
 

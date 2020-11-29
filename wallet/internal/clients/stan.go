@@ -24,7 +24,13 @@ func (s *Stan) Default() {
 
 func (s *Stan) Subsribes() {
 	eventWorker := workers.Stan{EventStore}
-	s.client.Subscribe("account_created", func(m *stan.Msg) {
-		eventWorker.HandleAccountCreated(m)
+	s.client.Subscribe("user_created", func(m *stan.Msg) {
+		log.Printf("received message %v", m)
+		eventWorker.HandleUserCreated(m)
+	}, stan.DurableName("durable-wallet"))
+
+	s.client.Subscribe("promotion_applied", func(m *stan.Msg) {
+		log.Printf("received message %v", m)
+		eventWorker.HandlePromotionApplied(m)
 	}, stan.DurableName("durable-wallet"))
 }

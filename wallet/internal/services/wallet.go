@@ -3,6 +3,8 @@ package services
 import (
 	"melting_pot/wallet/internal/db"
 	"melting_pot/wallet/internal/models"
+
+	"github.com/oklog/ulid/v2"
 )
 
 func Listwallets() (*[]models.Wallet, error) {
@@ -49,6 +51,32 @@ func CreateWallet(userID string) (*models.Wallet, error) {
 		&wallet.Balance,
 		&wallet.CreatedAt,
 		&wallet.UpdateAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &wallet, nil
+}
+
+func UpdateWallet(walletID string, reward float32) (*models.Wallet, error) {
+	walletULID, err := ulid.Parse(walletID)
+	if err != nil {
+		return nil, err
+	}
+
+	query := `
+		UPDATE wallets
+		SET 	balance = balance + $1,
+			updated_at = CURRENT_TIMESTAMP
+		WHERE id = $2
+		RETURNING id, balance
+	`
+
+	var wallet models.Wallet
+	err = db.Conn.QueryRow(query, reward, walletULID).Scan(
+		&wallet.ID,
+		&wallet.Balance,
 	)
 	if err != nil {
 		return nil, err
