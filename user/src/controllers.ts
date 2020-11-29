@@ -19,6 +19,15 @@ export class SignUpControlller {
     res.send(resp);
   }
 
+  @Methods.Get("/:userId")
+  async getUser(req: Request, res: Response) {
+    const [resp, err] = await this.userService.GetUser(req);
+    if (err) {
+      return res.status(err.code).send(err);
+    }
+    res.send(resp);
+  }
+
   @Methods.Post("/")
   async createUser(req: Request, res: Response) {
     const [resp, err] = await this.userService.CreateUser(req);
