@@ -25,7 +25,7 @@ func WalletHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListWallets(w http.ResponseWriter, r *http.Request) {
-	wallets, err := services.Listwallets()
+	wallets, err := services.Listwallets(r.URL.Query())
 	if err != nil {
 		log.Printf("services.ListWallets() err: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)

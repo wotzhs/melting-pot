@@ -64,12 +64,12 @@ export class UserService {
     }
   }
 
-  async GetUser(req): Promise<[object[] | null, IApiError | null]> {
+  async GetUser(req): Promise<[Record<string, any> | null, IApiError | null]> {
     try {
-      const users = await this.userOverviewModel.find({
+      const user = await this.userOverviewModel.findOne({
         userId: new ObjectId(req.params.userId),
       });
-      return [users, null];
+      return [user, null];
     } catch (err) {
       return [
         null,

@@ -7,6 +7,11 @@ pub mod card {
     use super::*;
     use rand::Rng;
 
+    #[derive(Debug, FromForm)]
+    pub struct Query {
+        pub user_id: String,
+    }
+
     #[derive(Serialize)]
     pub struct Card {
         pub id: Uuid,
