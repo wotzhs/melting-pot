@@ -72,10 +72,28 @@ export class UserService {
 
   async GetUser(req): Promise<[Record<string, any> | null, IApiError | null]> {
     try {
-      const user = await this.userOverviewModel.findOne({
-        userId: new ObjectId(req.params.userId),
+      const user = await this.usersModel.findOne({
+        _id: new ObjectId(req.params.userId),
       });
-      return [user, null];
+
+      const card: any = await this.cardService.api("getCard", {
+        user_id: user._id.toString(),
+      });
+
+      const wallet: any = await this.walletService.api("getWallet", {
+        user_id: user._id.toString(),
+      });
+
+      return [
+        {
+          userId: user._id.toString(),
+          fullname: user.fullname,
+          walletId: wallet[0].id,
+          walletBalance: wallet[0].balance,
+          cardNumber: card[0].number,
+        },
+        null,
+      ];
     } catch (err) {
       return [
         null,
