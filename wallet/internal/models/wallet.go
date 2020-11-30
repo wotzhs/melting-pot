@@ -12,7 +12,7 @@ type Wallet struct {
 	UserID    string    `json:"user_id"`
 	Balance   float32   `json:"balance"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdateAt  time.Time `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (w *Wallet) InitID() (err error) {

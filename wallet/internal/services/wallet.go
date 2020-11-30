@@ -22,7 +22,7 @@ func Listwallets() (*[]models.Wallet, error) {
 			&wallet.UserID,
 			&wallet.Balance,
 			&wallet.CreatedAt,
-			&wallet.UpdateAt,
+			&wallet.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -50,7 +50,7 @@ func CreateWallet(userID string) (*models.Wallet, error) {
 		&wallet.UserID,
 		&wallet.Balance,
 		&wallet.CreatedAt,
-		&wallet.UpdateAt,
+		&wallet.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err
@@ -70,13 +70,16 @@ func UpdateWallet(walletID string, reward float32) (*models.Wallet, error) {
 		SET 	balance = balance + $1,
 			updated_at = CURRENT_TIMESTAMP
 		WHERE id = $2
-		RETURNING id, balance
+		RETURNING *
 	`
 
 	var wallet models.Wallet
 	err = db.Conn.QueryRow(query, reward, walletULID).Scan(
 		&wallet.ID,
+		&wallet.UserID,
 		&wallet.Balance,
+		&wallet.CreatedAt,
+		&wallet.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err
