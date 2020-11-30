@@ -19,7 +19,7 @@ export namespace workers {
         );
         await this.userOverviewModel.updateOne(
           { userId: eventData.id },
-          { userId: eventData.id },
+          { userId: eventData.id, fullname: eventData.fullname },
           { upsert: true }
         );
       } catch (e) {
