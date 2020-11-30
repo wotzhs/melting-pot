@@ -15,7 +15,7 @@ export class UserService {
     this.usersModel = model("users", Schema.User);
     this.cardService = clients.Swagger.getService("apiCard");
     this.walletService = clients.Swagger.getService("apiWallet");
-    this.promotionService = clients.Swagger.getService("promotionService");
+    this.promotionService = clients.Swagger.getService("apiPromotion");
   }
 
   async CreateUser(req): Promise<[object | null, IApiError | null]> {
@@ -24,13 +24,22 @@ export class UserService {
         fullname: req.body.fullname,
       });
 
-      const card = await this.cardService.api("createCard", {});
-      const wallet = await this.walletService.api("initialiseWallet", {});
-      const promo = await this.promotionService.api("validatePromoCode", {});
-      const walletBalance = await this.walletService.api(
-        "updateWalletBalance",
-        {}
-      );
+      await this.cardService.api("createCard", {
+        user_id: user._id.toString(),
+      });
+
+      const wallet: any = await this.walletService.api("initializeWallet", {
+        user_id: user._id.toString(),
+      });
+
+      const promo: any = await this.promotionService.api("validatePromoCode", {
+        code: req.body.code,
+      });
+
+      await this.walletService.api("updateWalletBalance", {
+        wallet_id: wallet.id,
+        reward: promo.reward,
+      });
 
       return [{ _id: user._id }, null];
     } catch (err) {
@@ -47,7 +56,7 @@ export class UserService {
 
   async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
     try {
-      const users = await this.userOverviewModel.find();
+      const users = await this.usersModel.find();
       return [users, null];
     } catch (err) {
       return [
