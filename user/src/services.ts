@@ -23,7 +23,7 @@ export class UserService {
 
       const event = new Event();
       event.setName("user_created");
-      event.setAggregateId(user._id);
+      event.setAggregateId(user._id.toString());
       event.setAggregateType("user");
       event.setData(
         JSON.stringify({

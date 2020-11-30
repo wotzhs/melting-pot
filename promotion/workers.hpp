@@ -18,6 +18,7 @@ namespace workers {
 		if (status.first) {
 			json promoData = {
 				{"wallet_id", eventData["wallet_id"]},
+				{"user_id", eventData["user_id"]},
 				{"status", status.first},
 				{"reward", status.second},
 			};

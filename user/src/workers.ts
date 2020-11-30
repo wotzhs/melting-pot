@@ -54,7 +54,7 @@ export namespace workers {
           Buffer.from(message.getRawData()).toString()
         );
         await this.userOverviewModel.updateOne(
-          { walletId: eventData.wallet_id },
+          { userId: eventData.user_id },
           { walletBalance: eventData.balance },
           { upsert: true }
         );
