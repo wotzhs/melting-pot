@@ -85,6 +85,42 @@
           }
         }
       }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get a user",
+        "description": "Get a user",
+        "operationId": "getUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/GetUser"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -115,32 +151,30 @@
         "$ref": "#/definitions/User"
       }
     },
+    "GetUser": {
+      "$ref": "#/definitions/User"
+    },
     "User": {
       "type": "object",
       "properties": {
+        "userId": {
+          "type": "string",
+          "example": "some user id"
+        },
         "fullname": {
           "type": "string",
           "example": "John Doe"
         },
-        "cardStatus": {
-          "type": "string",
-          "enum": [
-            "active",
-            "closed",
-            "frozen"
-          ]
+        "cardNumber": {
+          "type": "string"
         },
         "walletBalance": {
           "type": "number",
           "example": 500
         },
-        "createdAt": {
+        "walletId": {
           "type": "string",
-          "example": "2020-11-04T15:43:22.085Z"
-        },
-        "updateAt": {
-          "type": "string",
-          "example": "2020-11-04T15:43:22.085Z"
+          "example": "some wallet id"
         }
       }
     },
