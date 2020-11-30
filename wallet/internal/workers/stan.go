@@ -75,6 +75,7 @@ func (w *Stan) HandleUserCreated(m *stan.Msg) {
 func (w *Stan) HandlePromotionApplied(m *stan.Msg) {
 	var eventData struct {
 		WalletID string  `json:"wallet_id"`
+		UserID   string  `json:"user_id"`
 		Status   bool    `json:"status"`
 		Reward   float32 `json:"reward"`
 	}
@@ -86,7 +87,7 @@ func (w *Stan) HandlePromotionApplied(m *stan.Msg) {
 
 	event := event_store.Event{
 		Name:          "wallet_updated",
-		AggregateId:   eventData.WalletID,
+		AggregateId:   eventData.UserID,
 		AggregateType: "user",
 	}
 
