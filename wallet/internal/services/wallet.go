@@ -3,13 +3,20 @@ package services
 import (
 	"melting_pot/wallet/internal/db"
 	"melting_pot/wallet/internal/models"
+	"net/url"
 
 	"github.com/oklog/ulid/v2"
 )
 
-func Listwallets() (*[]models.Wallet, error) {
-	query := "SELECT * from wallets"
-	rows, err := db.Conn.Query(query)
+func Listwallets(filters url.Values) (*[]models.Wallet, error) {
+	query := "SELECT * FROM wallets"
+	args := []interface{}{}
+	if userID := filters.Get("user_id"); userID != "" {
+		query = query + " WHERE user_id = $1"
+		args = append(args, userID)
+	}
+
+	rows, err := db.Conn.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
