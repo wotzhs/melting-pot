@@ -3,8 +3,61 @@ import * as EventStoreGrpcPb from "../proto/event_store/event_store_grpc_pb";
 import { Event } from "../proto/event_store/event_store_pb";
 import { connect, StanOptions, Stan as StanClient } from "node-nats-streaming";
 import { workers } from "./workers";
+import axios, { Method } from "axios";
 
 export namespace clients {
+  export class Swagger {
+    constructor(
+      private baseUrl?: string,
+      private methodPath?: Record<string, Record<string, string>>
+    ) {}
+
+    static getService(serviceName: string): Swagger {
+      let baseUrl: string;
+      let methodPath: Record<string, Record<string, string>>;
+
+      switch (serviceName) {
+        case "apiCard":
+          baseUrl = "localhost:5003";
+          methodPath = {
+            createCard: { method: "POST", path: "/" },
+            getCard: { method: "GET", path: "/" },
+          };
+          break;
+
+        case "apiWallet":
+          baseUrl = "localhost:5001";
+          methodPath = {
+            initializeWallet: { method: "POST", path: "/" },
+            updateWalletBalance: { method: "PUT", path: "/" },
+            getWallet: { method: "GET", path: "/" },
+          };
+          break;
+
+        case "apiPromotion":
+          baseUrl = "localhost:5004";
+          methodPath = {
+            validatePromoCode: { method: "GET", path: "/" },
+          };
+          break;
+      }
+      return new Swagger(baseUrl, methodPath);
+    }
+
+    async api(operationId: string, payload: object): Promise<object> {
+      try {
+        const res = await axios({
+          method: this.methodPath[operationId].method as Method,
+          url: this.baseUrl,
+          data: payload,
+        });
+        return res.data;
+      } catch (e) {
+        return e;
+      }
+    }
+  }
+
   export class EventStore {
     private client;
     constructor() {
