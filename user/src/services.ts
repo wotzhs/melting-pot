@@ -1,18 +1,21 @@
 import { model } from "mongoose";
 import { Schema } from "./models";
-import { IApiError } from "./interfaces";
+import { IApiError, ISwaggerClient } from "./interfaces";
 import { clients } from "./clients";
 import { Event } from "../proto/event_store/event_store_pb";
 import { ObjectId } from "mongodb";
 
 export class UserService {
   private usersModel: any;
-  private userOverviewModel: any;
-  private eventstoreClient: clients.EventStore;
+  private cardService: ISwaggerClient;
+  private walletService: ISwaggerClient;
+  private promotionService: ISwaggerClient;
+
   constructor() {
     this.usersModel = model("users", Schema.User);
-    this.userOverviewModel = model("useroverview", Schema.UserOverview);
-    this.eventstoreClient = new clients.EventStore();
+    this.cardService = clients.Swagger.getService("apiCard");
+    this.walletService = clients.Swagger.getService("apiWallet");
+    this.promotionService = clients.Swagger.getService("promotionService");
   }
 
   async CreateUser(req): Promise<[object | null, IApiError | null]> {
@@ -21,19 +24,13 @@ export class UserService {
         fullname: req.body.fullname,
       });
 
-      const event = new Event();
-      event.setName("user_created");
-      event.setAggregateId(user._id.toString());
-      event.setAggregateType("user");
-      event.setData(
-        JSON.stringify({
-          ...user.toJSON(),
-          code: req.body.code,
-        })
+      const card = await this.cardService.api("createCard", {});
+      const wallet = await this.walletService.api("initialiseWallet", {});
+      const promo = await this.promotionService.api("validatePromoCode", {});
+      const walletBalance = await this.walletService.api(
+        "updateWalletBalance",
+        {}
       );
-
-      const resp = await this.eventstoreClient.publish(event);
-      console.log("procesed event:", resp);
 
       return [{ _id: user._id }, null];
     } catch (err) {
