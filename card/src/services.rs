@@ -1,12 +1,27 @@
 pub mod card {
     use crate::db;
-    use crate::models::card::{generate_card_number, Card};
+    use crate::models::card::{generate_card_number, Card, Query};
+    use postgres::types::ToSql;
     use rocket::http::RawStr;
+    use rocket::request::LenientForm;
     use std::error;
     use uuid::Uuid;
 
-    pub fn list_card(conn: db::DbConn) -> Result<Vec<Card>, postgres::Error> {
-        let res = conn.query("SELECT * from cards", &[]);
+    pub fn list_card(
+        conn: db::DbConn,
+        query: Option<LenientForm<Query>>,
+    ) -> Result<Vec<Card>, postgres::Error> {
+        let mut statement = "SELECT * FROM cards";
+        let mut args = Vec::new();
+
+        if let Some(query) = query {
+            statement = "SELECT * FROM cards WHERE user_id = $1";
+            args.push(query.user_id.to_string());
+        }
+
+        let filters: Vec<&dyn ToSql> = args.iter().map(|filter| filter as &dyn ToSql).collect();
+
+        let res = conn.query(statement, &filters[..]);
 
         let mut cards: Vec<Card> = Vec::new();
 
