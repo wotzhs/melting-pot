@@ -3,7 +3,7 @@ import * as EventStoreGrpcPb from "../proto/event_store/event_store_grpc_pb";
 import { Event } from "../proto/event_store/event_store_pb";
 import { connect, StanOptions, Stan as StanClient } from "node-nats-streaming";
 import { workers } from "./workers";
-import axios, { Method } from "axios";
+import axios, { Method, AxiosRequestConfig } from "axios";
 
 export namespace clients {
   export class Swagger {
@@ -46,11 +46,21 @@ export namespace clients {
 
     async api(operationId: string, payload: object): Promise<object> {
       try {
-        const res = await axios({
-          method: this.methodPath[operationId].method as Method,
-          url: this.baseUrl,
-          data: payload,
-        });
+        const method = this.methodPath[operationId].method as Method;
+        const config: AxiosRequestConfig = {
+          method,
+          url: `http://${this.baseUrl}${this.methodPath[operationId].path}`,
+        };
+
+        if (method === "POST" || "PUT") {
+          config.data = payload;
+        }
+
+        if (method === "GET") {
+          config.params = payload;
+        }
+
+        const res = await axios(config);
         return res.data;
       } catch (e) {
         return e;
