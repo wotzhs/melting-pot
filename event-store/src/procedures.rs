@@ -38,12 +38,14 @@ impl event_store_server::EventStore for EventStore {
 
         match self.sc.publish(&event.name, event.data.as_bytes()).await {
             Ok(_) => println!("published event: {:?}", event),
-            Err(e) => println!("failed to publish event: {:?} error: {:?}", event, e),
+            Err(e) => {
+                println!("failed to publish event: {:?} error: {:?}", event, e);
+                return Err(Status::new(Code::Internal, Error::to_string(&e)));
+            }
         }
 
         let reply = event_store::EventResponse {
             event_id: String::from_utf8_lossy(&result.unwrap()).to_string(),
-            error: String::from(""),
         };
 
         Ok(Response::new(reply))
