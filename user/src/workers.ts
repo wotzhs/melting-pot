@@ -37,7 +37,7 @@ export namespace workers {
         );
         await this.userOverviewModel.updateOne(
           { userId: eventData.user_id },
-          { walletId: eventData.wallet_id },
+          { walletId: eventData.wallet_id, walletBalance: 0 },
           { upsert: true }
         );
       } catch (e) {

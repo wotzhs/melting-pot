@@ -108,9 +108,11 @@ func (w *Stan) HandlePromotionApplied(m *stan.Msg) {
 	}
 
 	pubEventData := struct {
+		UserID   string  `json:"user_id"`
 		WalletID string  `json:"wallet_id"`
 		Balance  float32 `json:"balance"`
 	}{
+		UserID:   wallet.UserID,
 		WalletID: wallet.ID.String(),
 		Balance:  wallet.Balance,
 	}
