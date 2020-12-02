@@ -14,7 +14,7 @@ export class UserService {
 
   constructor() {
     this.usersModel = model("users", Schema.User);
-    this.userOverviewModel = model("users", Schema.UserOverview);
+    this.userOverviewModel = model("useroverview", Schema.UserOverview);
     this.cardService = clients.Swagger.getService("apiCard");
     this.walletService = clients.Swagger.getService("apiWallet");
     this.promotionService = clients.Swagger.getService("apiPromotion");
