@@ -56,42 +56,6 @@ export class UserService {
     }
   }
 
-  async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
-    try {
-      const users = await this.usersModel.find();
-      const res = [];
-
-      for (const user of users) {
-        const card: any = await this.cardService.api("getCard", {
-          user_id: user._id.toString(),
-        });
-
-        const wallet: any = await this.walletService.api("getWallet", {
-          user_id: user._id.toString(),
-        });
-
-        res.push({
-          userId: user._id.toString(),
-          fullname: user.fullname,
-          walletId: wallet[0]?.id,
-          walletBalance: wallet[0]?.balance,
-          cardNumber: card[0]?.number,
-        });
-      }
-
-      return [res, null];
-    } catch (err) {
-      return [
-        null,
-        {
-          code: 500,
-          type: "Internal",
-          message: err.message,
-        },
-      ];
-    }
-  }
-
   async GetUser(req): Promise<[Record<string, any> | null, IApiError | null]> {
     try {
       const user = await this.usersModel.findOne({
@@ -116,6 +80,42 @@ export class UserService {
         },
         null,
       ];
+    } catch (err) {
+      return [
+        null,
+        {
+          code: 500,
+          type: "Internal",
+          message: err.message,
+        },
+      ];
+    }
+  }
+
+  async ListUsers(req): Promise<[object[] | null, IApiError | null]> {
+    try {
+      const users = await this.usersModel.find();
+      const res = [];
+
+      for (const user of users) {
+        const card: any = await this.cardService.api("getCard", {
+          user_id: user._id.toString(),
+        });
+
+        const wallet: any = await this.walletService.api("getWallet", {
+          user_id: user._id.toString(),
+        });
+
+        res.push({
+          userId: user._id.toString(),
+          fullname: user.fullname,
+          walletId: wallet[0]?.id,
+          walletBalance: wallet[0]?.balance,
+          cardNumber: card[0]?.number,
+        });
+      }
+
+      return [res, null];
     } catch (err) {
       return [
         null,
