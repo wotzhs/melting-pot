@@ -133,6 +133,10 @@
         "fullname": {
           "type": "string",
           "example": "John Doe"
+        },
+        "code": {
+          "type": "string",
+          "example": "EARLYBIRD"
         }
       }
     },
