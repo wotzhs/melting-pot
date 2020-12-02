@@ -7,12 +7,14 @@ import { ObjectId } from "mongodb";
 
 export class UserService {
   private usersModel: any;
+  private userOverviewModel: any;
   private cardService: ISwaggerClient;
   private walletService: ISwaggerClient;
   private promotionService: ISwaggerClient;
 
   constructor() {
     this.usersModel = model("users", Schema.User);
+    this.userOverviewModel = model("users", Schema.UserOverview);
     this.cardService = clients.Swagger.getService("apiCard");
     this.walletService = clients.Swagger.getService("apiWallet");
     this.promotionService = clients.Swagger.getService("apiPromotion");
