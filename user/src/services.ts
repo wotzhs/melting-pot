@@ -36,10 +36,12 @@ export class UserService {
         code: req.body.code,
       });
 
-      await this.walletService.api("updateWalletBalance", {
-        wallet_id: wallet.id,
-        reward: promo.reward,
-      });
+      if (promo.status) {
+        await this.walletService.api("updateWalletBalance", {
+          wallet_id: wallet.id,
+          reward: promo.reward,
+        });
+      }
 
       return [{ _id: user._id }, null];
     } catch (err) {
