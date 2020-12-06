@@ -6,14 +6,14 @@
 
 class Services {
 public:
-	static std::pair<bool, int> ValidatePromoCode(std::string_view s) {
+	static std::pair<bool, int> ValidatePromoCode(std::string_view promoCode) {
 		std::unordered_map<std::string_view, int> mp = {
 			{"EARLYBIRD", 25},
 			{"NOTSOEARLYBIRD", 5},
 		};
 
-		bool promoApplied = mp.count(s) > 0;
-		int reward = promoApplied ? mp[s] : 0;
+		bool promoApplied = mp.count(promoCode) > 0;
+		int reward = promoApplied ? mp[promoCode] : 0;
 
 		return std::make_pair(promoApplied, reward);
 	}
