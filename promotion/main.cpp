@@ -10,7 +10,7 @@ int main() {
 	const char  *clusterName = "melting-pot";
 	const char  *clientID    = "promotion";
 
-	std::unique_ptr<clients::Stan> stan = std::unique_ptr<clients::Stan>(new clients::Stan(
+	std::unique_ptr<clients::Stan> stan = std::make_unique<clients::Stan>(new clients::Stan(
 		nOpts, 
 		clusterName, 
 		clientID
