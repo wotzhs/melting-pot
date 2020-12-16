@@ -21,11 +21,11 @@ public:
 				}.dump());
 			}
 
-			std::pair<bool, int> status = Services::ValidatePromoCode(code);
+			int reward = Services::ValidatePromoCode(code).value_or(0);
 
 			res->end(json{
-				{"status", status.first},
-				{"reward", status.second},
+				{"status", reward != 0},
+				{"reward", reward},
 			}.dump());
 		};
 	}
