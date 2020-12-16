@@ -10,11 +10,11 @@ int main() {
 	const char  *clusterName = "melting-pot";
 	const char  *clientID    = "promotion";
 
-	std::unique_ptr<clients::Stan> stan = std::make_unique<clients::Stan>(new clients::Stan(
+	std::unique_ptr<clients::Stan> stan = std::make_unique<clients::Stan>(
 		nOpts, 
 		clusterName, 
 		clientID
-	));
+	);
 	
 	stan->Subscribe("durable-promo", "wallet_created");
 
