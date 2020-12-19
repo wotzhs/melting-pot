@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <grpc++/create_channel.h>
+#include <string_view>
 #include "../proto/event_store/event_store.grpc.pb.h"
 #include "../proto/event_store/event_store.pb.h"
 
@@ -13,8 +14,8 @@ namespace clients {
 class EventStore {
 	std::unique_ptr<event_store::EventStore::Stub> stub_;
 public:
-	EventStore(std::string addr) {
-		std::shared_ptr<Channel> ch = CreateChannel(addr, InsecureChannelCredentials());
+	EventStore(std::string_view addr) {
+		std::shared_ptr<Channel> ch = CreateChannel(std::string(addr).c_str(), InsecureChannelCredentials());
 		stub_ = event_store::EventStore::NewStub(ch);
 	};
 
