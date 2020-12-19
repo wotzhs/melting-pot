@@ -8,9 +8,8 @@
 
 using json = nlohmann::json;
 
-class Handlers {
-public:
-	static auto HandlePromoCodeValidation() {
+namespace Handlers {
+	auto HandlePromoCodeValidation() {
 		return [](auto *res, auto *req) {
 			std::string_view code = req->getQuery("code");
 
@@ -21,14 +20,14 @@ public:
 				}.dump());
 			}
 
-			std::pair<bool, int> status = Services::ValidatePromoCode(code);
+			int reward = Services::GetRewardAmountFromPromoCode(code).value_or(0);
 
 			res->end(json{
-				{"status", status.first},
-				{"reward", status.second},
+				{"status", reward != 0},
+				{"reward", reward},
 			}.dump());
 		};
 	}
 };
 
-#endif /* HANDLERS_H */
+#endif

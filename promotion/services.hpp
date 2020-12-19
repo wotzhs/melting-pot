@@ -4,18 +4,19 @@
 #include <unordered_map>
 #include <string_view>
 
-class Services {
-public:
-	static std::pair<bool, int> ValidatePromoCode(std::string_view s) {
-		std::unordered_map<std::string_view, int> mp = {
+namespace Services {
+	std::optional<int> GetRewardAmountFromPromoCode(std::string_view promoCode) {
+		std::unordered_map<std::string_view, int> validPromoCodes = {
 			{"EARLYBIRD", 25},
 			{"NOTSOEARLYBIRD", 5},
 		};
 
-		bool promoApplied = mp.count(s) > 0;
-		int reward = promoApplied ? mp[s] : 0;
+		auto promo = validPromoCodes.find(promoCode);
+		if (promo != validPromoCodes.end()) {
+			return std::optional<int>{promo->second};
+		}
 
-		return std::make_pair(promoApplied, reward);
+		return std::nullopt;
 	}
 };
 

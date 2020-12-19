@@ -84,8 +84,8 @@ private:
 
 		stanMsg_Destroy(msg);
 	}
-}; // Stan
+};
 
-} // clients
+}
 
-#endif // STAN_H
+#endif

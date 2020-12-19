@@ -14,13 +14,12 @@ namespace workers {
 	void HandleWalletCreated(const char *data) {
 		auto eventData = json::parse(std::string(data));
 		auto code = std::string_view(eventData.value("code", ""));
-		std::pair<bool, int> status = Services::ValidatePromoCode(code);
-		if (status.first) {
+		std::optional<int> reward = Services::GetRewardAmountFromPromoCode(code);
+		if (reward) {
 			json promoData = {
 				{"wallet_id", eventData["wallet_id"]},
 				{"user_id", eventData["user_id"]},
-				{"status", status.first},
-				{"reward", status.second},
+				{"reward", *reward},
 			};
 
 			EventStore eventPublisher = EventStore("[::1]:50051");
@@ -42,6 +41,6 @@ namespace workers {
 			}
 		}
 	};
-} // workers
+}
 
-#endif // WORKERS_H
+#endif
