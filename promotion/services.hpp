@@ -5,7 +5,7 @@
 #include <string_view>
 
 namespace Services {
-	std::optional<int> ValidatePromoCode(std::string_view promoCode) {
+	std::optional<int> GetRewardAmountFromPromoCode(std::string_view promoCode) {
 		std::unordered_map<std::string_view, int> validPromoCodes = {
 			{"EARLYBIRD", 25},
 			{"NOTSOEARLYBIRD", 5},

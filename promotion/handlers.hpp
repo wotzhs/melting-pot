@@ -20,7 +20,7 @@ namespace Handlers {
 				}.dump());
 			}
 
-			int reward = Services::ValidatePromoCode(code).value_or(0);
+			int reward = Services::GetRewardAmountFromPromoCode(code).value_or(0);
 
 			res->end(json{
 				{"status", reward != 0},

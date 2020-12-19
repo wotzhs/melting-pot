@@ -14,7 +14,7 @@ namespace workers {
 	void HandleWalletCreated(const char *data) {
 		auto eventData = json::parse(std::string(data));
 		auto code = std::string_view(eventData.value("code", ""));
-		std::optional<int> reward = Services::ValidatePromoCode(code);
+		std::optional<int> reward = Services::GetRewardAmountFromPromoCode(code);
 		if (reward) {
 			json promoData = {
 				{"wallet_id", eventData["wallet_id"]},
