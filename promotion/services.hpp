@@ -4,9 +4,8 @@
 #include <unordered_map>
 #include <string_view>
 
-class Services {
-public:
-	static std::optional<int> ValidatePromoCode(std::string_view promoCode) {
+namespace Services {
+	std::optional<int> ValidatePromoCode(std::string_view promoCode) {
 		std::unordered_map<std::string_view, int> validPromoCodes = {
 			{"EARLYBIRD", 25},
 			{"NOTSOEARLYBIRD", 5},

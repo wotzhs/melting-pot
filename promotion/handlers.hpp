@@ -8,9 +8,8 @@
 
 using json = nlohmann::json;
 
-class Handlers {
-public:
-	static auto HandlePromoCodeValidation() {
+namespace Handlers {
+	auto HandlePromoCodeValidation() {
 		return [](auto *res, auto *req) {
 			std::string_view code = req->getQuery("code");
 
