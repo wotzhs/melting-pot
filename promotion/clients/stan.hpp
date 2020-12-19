@@ -47,7 +47,15 @@ public:
 		nats_Close();
 	}
 
-	Stan(const Stan& other): Stan(other.opts, other.cluster, other.clientID) {}
+	Stan(const Stan& stan2): Stan(stan2.opts, stan2.cluster, stan2.clientID) {}
+
+	Stan& operator=(const Stan& stan2) {
+		if (this == &stan2) return *this;
+		this->opts = stan2.opts;
+		this->cluster =  stan2.cluster;
+		this->clientID = stan2.clientID;
+		return *this;
+	}
 
 	void Subscribe(const char* durableName, const char* subject) {
 		if (s == NATS_OK) {
