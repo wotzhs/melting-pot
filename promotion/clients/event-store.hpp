@@ -22,9 +22,9 @@ public:
 		ClientContext ctx;
 		return stub_->Publish(&ctx, event, resp);
 	}
-}; // EvcentStore
+};
 
 
-}; // clients
+};
 
-#endif /* CLIENTS_H */
+#endif

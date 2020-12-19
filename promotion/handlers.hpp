@@ -30,4 +30,4 @@ namespace Handlers {
 	}
 };
 
-#endif /* HANDLERS_H */
+#endif

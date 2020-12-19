@@ -41,6 +41,6 @@ namespace workers {
 			}
 		}
 	};
-} // workers
+}
 
-#endif // WORKERS_H
+#endif
