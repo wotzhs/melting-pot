@@ -10,11 +10,14 @@ namespace clients {
 
 class Stan {
 	natsStatus s;
-	stanConnOptions    *connOpts   =   nullptr;
-	stanSubOptions     *subOpts    =   nullptr;
-	stanConnection     *sc         =   nullptr;
-	stanSubscription   *sub        =   nullptr;
-	bool               connLost    =   false;
+	stanConnOptions*  connOpts = nullptr;
+	stanSubOptions*   subOpts  = nullptr;
+	stanConnection*   sc       = nullptr;
+	stanSubscription* sub      = nullptr;
+	bool              connLost = false;
+	natsOptions*      opts     = nullptr;
+	const char*       cluster  = nullptr;
+	const char*       clientID = nullptr;
 public:
 	Stan(natsOptions *opts, const char* cluster, const char* clientID) {
 		s = stanConnOptions_Create(&connOpts);
@@ -28,6 +31,9 @@ public:
 
 		if (s == NATS_OK) {
 			s = stanConnection_Connect(&sc, cluster, clientID, connOpts);
+			this->opts = opts;
+			this->cluster = cluster;
+			this->clientID = clientID;
 		}
 
 		natsOptions_Destroy(opts);
@@ -39,6 +45,29 @@ public:
 		stanSubscription_Destroy(sub);
 		stanConnection_Destroy(sc);
 		nats_Close();
+	}
+
+	Stan(const Stan& stan2): Stan(stan2.opts, stan2.cluster, stan2.clientID) {}
+
+	Stan& operator=(const Stan& stan2) {
+		if (this == &stan2) return *this;
+		this->opts = stan2.opts;
+		this->cluster =  stan2.cluster;
+		this->clientID = stan2.clientID;
+		return *this;
+	}
+
+	Stan(Stan&& stan2) noexcept {
+		this->opts = std::exchange(stan2.opts, nullptr);
+		this->cluster = std::exchange(stan2.cluster, nullptr);
+		this->clientID = std::exchange(stan2.clientID, nullptr);
+	}
+
+	Stan& operator=(Stan&& stan2) noexcept {
+		std::swap(this->opts, stan2.opts);
+		std::swap(this->cluster, stan2.cluster);
+		std::swap(this->clientID, stan2.clientID);
+		return *this;
 	}
 
 	void Subscribe(const char* durableName, const char* subject) {
