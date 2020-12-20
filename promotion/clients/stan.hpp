@@ -57,6 +57,12 @@ public:
 		return *this;
 	}
 
+	Stan(Stan&& stan2) noexcept {
+		this->opts = std::exchange(stan2.opts, nullptr);
+		this->cluster = std::exchange(stan2.cluster, nullptr);
+		this->clientID = std::exchange(stan2.clientID, nullptr);
+	}
+
 	void Subscribe(const char* durableName, const char* subject) {
 		if (s == NATS_OK) {
 			s = stanSubOptions_Create(&subOpts);
