@@ -63,6 +63,13 @@ public:
 		this->clientID = std::exchange(stan2.clientID, nullptr);
 	}
 
+	Stan& operator=(Stan&& stan2) noexcept {
+		std::swap(this->opts, stan2.opts);
+		std::swap(this->cluster, stan2.cluster);
+		std::swap(this->clientID, stan2.clientID);
+		return *this;
+	}
+
 	void Subscribe(const char* durableName, const char* subject) {
 		if (s == NATS_OK) {
 			s = stanSubOptions_Create(&subOpts);
